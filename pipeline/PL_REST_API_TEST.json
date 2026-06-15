@@ -1,0 +1,67 @@
+{
+	"name": "PL_REST_API_TEST",
+	"properties": {
+		"activities": [
+			{
+				"name": "Until1",
+				"type": "Until",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(variables('PageNo'),5)",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Get_Employee_Data",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "GET",
+								"url": "@concat('https://jsonplaceholder.typicode.com/posts?_page=',string(variables('PageNo')),'&_limit=5')"
+							}
+						},
+						{
+							"name": "Increment_Page",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Get_Employee_Data",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "PageNo",
+								"value": "@add(variables('PageNo'),1)"
+							}
+						}
+					],
+					"timeout": "0.12:00:00"
+				}
+			}
+		],
+		"variables": {
+			"PageNo": {
+				"type": "Integer",
+				"defaultValue": 1
+			}
+		},
+		"annotations": []
+	}
+}
