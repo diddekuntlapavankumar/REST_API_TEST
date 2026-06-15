@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(variables('PageNo'),5)",
+						"value": "@equals(variables('StopLoop'),true)",
 						"type": "Expression"
 					},
 					"activities": [
@@ -50,6 +50,19 @@
 								"variableName": "PageNo",
 								"value": "@add(variables('PageNo'),1)"
 							}
+						},
+						{
+							"name": "If Condition1",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Increment_Page",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": []
 						}
 					],
 					"timeout": "0.12:00:00"
@@ -60,6 +73,10 @@
 			"PageNo": {
 				"type": "Integer",
 				"defaultValue": 1
+			},
+			"StopLoop": {
+				"type": "Boolean",
+				"defaultValue": false
 			}
 		},
 		"annotations": []
